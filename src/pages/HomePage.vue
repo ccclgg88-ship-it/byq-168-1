@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import AvatarUpload from '@/components/AvatarUpload.vue'
 import NicknameInput from '@/components/NicknameInput.vue'
 import TagCloudLoading from '@/components/TagCloudLoading.vue'
 import ToastMessage from '@/components/ToastMessage.vue'
 import { Sparkles } from 'lucide-vue-next'
+
+const router = useRouter()
 
 const avatarUrl = ref('')
 const nickname = ref('')
@@ -34,6 +37,19 @@ function handleAvatarError(msg: string) {
 function handleStart() {
   if (!canStart.value) return
   isLoading.value = true
+  
+  try {
+    localStorage.setItem('quiz_avatar', avatarUrl.value)
+    localStorage.setItem('quiz_nickname', nickname.value)
+  } catch (e) {
+    console.error('存储数据失败', e)
+  }
+  
+  setTimeout(() => {
+    router.push({
+      path: '/result',
+    })
+  }, 3000)
 }
 </script>
 
